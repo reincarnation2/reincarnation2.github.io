@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}个人博客{% endblock %}</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* 自定义样式 */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --nav-bg-color: #333;
+            --nav-text-color: white;
+            --footer-bg-color: #333;
+            --footer-text-color: white;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --primary-color: #66bfff;
+            --secondary-color: #adb5bd;
+            --nav-bg-color: #121212;
+            --nav-text-color: #e6e6e6;
+            --footer-bg-color: #121212;
+            --footer-text-color: #e6e6e6;
+        }
+
+        [data-theme="China_Red"] {
+            --bg-color: #FF0000;
+            --text-color: #e6e6e6;
+            --primary-color: #f00056;
+            --secondary-color: #adb5bd;
+            --nav-bg-color: #f20c00;
+            --nav-text-color: #9d2933;
+            --footer-bg-color: #121212;
+            --footer-text-color: #e6e6e6;
+        }
+
+        [data-theme="China_Red"] .card-body {
+            background-color: #f36838;
+        }
+
+        [data-theme="Fantasy_Blue"] {
+            --bg-color: #0A192F; /* 深邃的背景色，模拟夜空 */
+            --text-color: #CCD6F6; /* 淡蓝色文本，在深色背景下清晰可见 */
+            --primary-color: #64FFDA; /* 明亮的青绿色，作为强调色 */
+            --secondary-color: #8892B0; /* 柔和的蓝灰色，用于次要信息 */
+            --nav-bg-color: #112240; /* 比背景稍亮的导航栏背景色 */
+            --nav-text-color: #CCD6F6; /* 导航栏文本色与主体文本色一致 */
+            --footer-bg-color: #112240; /* 页脚背景色与导航栏一致 */
+            --footer-text-color: #CCD6F6; /* 页脚文本色与主体文本色一致 */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.5s ease, color 0.5s ease; /* 添加过渡效果 */
+        }
+
+        nav {
+            background-color: var(--nav-bg-color);
+            color: var(--nav-text-color);
+            transition: top 0.3s, background-color 0.5s ease, color 0.5s ease; /* 添加过渡效果 */
+        }
+
+        footer {
+            background-color: var(--footer-bg-color);
+            color: var(--footer-text-color);
+            text-align: center;
+            padding: 1rem;
+            transition: background-color 0.5s ease, color 0.5s ease; /* 添加过渡效果 */
+        }
+
+        .article-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .dropdown-menu {
+            max-width: 8vw;
+        }
+
+        .content-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .navbar {
+            padding-top: 0.2rem;
+            padding-bottom: 0.2rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px; /* 在小屏幕上增加容器的内边距 */
+            }
+            .card {
+                width: 100%; /* 在小屏幕上让卡片占满整个容器 */
+            }
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        footer {
+            margin-top: auto; /* 确保页脚始终在底部 */
+        }
+
+        {% block css %}{% endblock %}
+    </style>
+</head>
+
+<body data-theme="light">
+    <div class="main-wrapper">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('index') }}">个人博客</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="切换导航">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">首页</a></li>
+
+                        <!-- 分类下拉框 -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                分类
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                {% for category in categories %}
+                                <li><a class="dropdown-item" href="{{ url_for('category', category_name=category) }}">{{ category }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <!-- 标签下拉框 -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="tagDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                标签
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="tagDropdown">
+                                {% for tag in tags %}
+                                <li><a class="dropdown-item" href="{{ url_for('tag', tag_name=tag) }}">{{ tag }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        {% if 'user_id' in session %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">退出</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">登录</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">注册</a></li>
+                        {% endif %}
+                        <form class="d-flex" method="get" action="{{ url_for('search') }}">
+                            <input class="form-control me-2" type="search" placeholder="搜索文章" aria-label="Search" name="query">
+                            <button class="btn btn-outline-light" type="submit">🔍</button>
+                        </form>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">关于我</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">联系我</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                主题
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('light')">明亮</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('dark')">暗黑</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('China_Red')">中国红</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('Fantasy_Blue')">奇幻蓝</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">个人中心</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content-center" style="padding-top: 56px;"> <!-- 添加内边距，值为导航栏的高度 -->
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- 页脚 -->
+        <footer>
+            <div class="container">
+                &copy; 2025 Z.个人博客版权所有（现在没备案）
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 从cookie中获取主题信息
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // 设置主题并保存到cookie中
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            document.cookie = `theme=${theme}; path=/`;
+        }
+
+        // 页面加载时读取cookie并设置主题
+        const savedTheme = getCookie('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+
+        // 导航栏隐藏和显示逻辑
+        let prevScrollpos = window.pageYOffset;
+        window.onscroll = function () {
+            const currentScrollPos = window.pageYOffset;
+            const mainNav = document.getElementById("mainNav");
+            if (prevScrollpos > currentScrollPos) {
+                // 向上滚动，显示导航栏
+                mainNav.style.top = "0";
+            } else {
+                // 向下滚动，隐藏导航栏
+                mainNav.style.top = "-56px"; // 导航栏的高度
+            }
+            prevScrollpos = currentScrollPos;
+        }
+    </script>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

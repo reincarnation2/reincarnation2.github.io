@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">新建文章</h1>
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label">标题:</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">内容:</label>
+            <textarea id="content" name="content" class="form-control" rows="10" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">分类:</label>
+            <input type="text" id="category" name="category" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="tags" class="form-label">标签:</label>
+            <input type="text" id="tags" name="tags" class="form-control">
+        </div>
+        <!-- 新增文件上传输入框 -->
+        <div class="mb-3">
+            <label for="thumbnail" class="form-label">文章封面:</label>
+            <input type="file" id="thumbnail" name="thumbnail" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">发布文章</button>
+    </form>
+</div>
+{% endblock %}

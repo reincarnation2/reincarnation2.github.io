@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}主页{% endblock %}
+{% block content %}
+<!-- 文章列表 -->
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4">个人博客</h1>
+        <div class="row">
+            {% for article in articles %}
+            <!-- 将 col-md-4 修改为 col-md-12 以实现竖向排列 -->
+            <div class="col-md-12 mb-4">  <!-- 增大外边距，让卡片之间有更多空间 -->
+                <div class="card h-100 shadow-sm" style="width: 100%; margin: 0 auto; position: relative;">  <!-- 调整卡片宽度为 100% 并居中，设置相对定位 -->
+                    <!-- 显示文章封面图片 -->
+                    {% if article.thumbnail %}
+                    <img src="{{ article.thumbnail }}" alt="Article Image" class="card-img-top" style="height: 700px; object-fit: cover;">  <!-- 增大图片高度 -->
+                    {% else %}
+                    <img src="/static/default-thumbnail.jpg" alt="Article Image" class="card-img-top" style="height: 700px; object-fit: cover;">  <!-- 增大图片高度 -->
+                    {% endif %}
+                    <div class="card-body text-white" style="padding: 20px; position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">  <!-- 文字卡片半透明，增大内边距 -->
+                        <h5 class="card-title"><a href="{{ url_for('article', article_id=article.id) }}" style="color: white;">{{ article.title }}</a></h5>
+                        <p class="card-text" style="font-size: 1em;">作者: {{ article.author.username }}</p>  <!-- 适当增大字体大小 -->
+                        <p class="card-text" style="font-size: 1em;">发布日期: {{ article.publish_date }}</p>  <!-- 适当增大字体大小 -->
+                        <p class="card-text" style="font-size: 1em;">分类: {{ article.category }}</p>  <!-- 适当增大字体大小 -->
+                        <p class="card-text" style="font-size: 1em;">标签: {{ article.tags }}</p>  <!-- 适当增大字体大小 -->
+                        <p class="card-text" style="font-size: 1em;">{{ article.content[:200] }}...</p>  <!-- 适当增大字体大小 -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

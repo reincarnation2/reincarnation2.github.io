@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}编辑文章 - {{ article.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">编辑文章 - {{ article.title }}</h1>
+    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+        <!-- 标题输入框 -->
+        <div class="mb-3">
+            <label for="title" class="form-label">标题:</label>
+            <input type="text" id="title" name="title" value="{{ article.title }}" class="form-control" required>
+            <div class="invalid-feedback">
+                请输入文章标题。
+            </div>
+        </div>
+        <!-- 内容输入框 -->
+        <div class="mb-3">
+            <label for="content" class="form-label">内容:</label>
+            <textarea id="content" name="content" class="form-control" rows="10" required>{{ article.content }}</textarea>
+            <div class="invalid-feedback">
+                请输入文章内容。
+            </div>
+        </div>
+        <!-- 分类输入框 -->
+        <div class="mb-3">
+            <label for="category" class="form-label">分类:</label>
+            <input type="text" id="category" name="category" value="{{ article.category }}" class="form-control">
+        </div>
+        <!-- 标签输入框 -->
+        <div class="mb-3">
+            <label for="tags" class="form-label">标签:</label>
+            <input type="text" id="tags" name="tags" value="{{ article.tags }}" class="form-control">
+        </div>
+        <!-- 新增封面上传输入框 -->
+        <div class="mb-3">
+            <label for="thumbnail" class="form-label">文章封面:</label>
+            <input type="file" id="thumbnail" name="thumbnail" class="form-control">
+        </div>
+        <!-- 提交按钮 -->
+        <button type="submit" class="btn btn-primary">保存更改</button>
+    </form>
+</div>
+{% endblock %}

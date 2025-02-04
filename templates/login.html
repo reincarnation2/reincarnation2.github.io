@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}登录{% endblock %}
+
+{% block css %}
+
+        /* 优化表单样式 */
+        form[id="username"] {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-top: 20px;
+        }
+
+        /* 优化输入框样式 */
+        form input[type="text"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="password"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* 优化按钮样式 */
+        form input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* 优化标签样式 */
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+
+{% endblock %}
+
+{% block content %}
+<h1>登录</h1>
+<form method="post" id="LoginForm">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+    <input type="submit" value="登录">
+</form>
+{% endblock %}

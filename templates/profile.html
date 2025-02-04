@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}个人中心{% endblock %}
+
+{% block css %}
+<!-- 引入自定义样式 -->
+<style>
+    /* 为个人中心整体添加一些间距和居中样式 */
+    .personal-center {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 调整标题的样式 */
+    .personal-center h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .personal-center h2 {
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    /* 调整表单元素的样式 */
+    .personal-center form label {
+        font-weight: bold;
+        color: #666;
+    }
+
+    /* 优化输入框样式 */
+
+    .personal-center form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .personal-center form input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .personal-center form input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* 链接样式 */
+    .personal-center a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .personal-center a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="personal-center">
+    <h1>个人中心</h1>
+    <h2>修改密码</h2>
+    <form method="post">
+        <label for="old_password">旧密码:</label>
+        <input type="password" id="old_password" name="old_password" required><br>
+        <label for="new_password">新密码:</label>
+        <input type="password" id="new_password" name="new_password" required><br>
+        <label for="confirm_password">确认密码:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required><br>
+        <input type="submit" value="修改密码">
+    </form>
+    <!-- 仅当用户是管理员时显示链接 -->
+    {% if is_admin %}
+    <a href="{{ url_for('new_article') }}">新建文章</a>
+    <!-- 如果有文章ID，可按需修改这里的 article_id -->
+    <a href="{{ url_for('edit_article', article_id=1) }}">编辑文章</a> 
+    {% endif %}
+</div>
+{% endblock %}

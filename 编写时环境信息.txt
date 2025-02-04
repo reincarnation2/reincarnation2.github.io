@@ -1,0 +1,11 @@
+Python 版本 3.9→3.14.0a4
+
+运行系统信息
+CPU Inter 酷睿 4.xG → 3.3G
+内存 8G（4G*2）→4G
+系统 Windows11→Win7→Win10
+编辑器 Pycharm2024.2 (Professional) →PythonIDE→改用记事本了
+
+
+已在githubpages上托管.
+链接:reincarnation2.github.io

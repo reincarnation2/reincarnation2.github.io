@@ -1,0 +1,12 @@
+templates 文件一览               解释           预定编写顺序      （粗略地搭建框架）
+	about.html           关于我        ⑥√
+	article.html           文章           ①√
+	category.html       分类文章     ②√
+	contact.html         联系我        ⑦√
+	edit_article.html    编辑文章     ⑤√
+	index.html            这是主页     ⑧√
+	login.html             登录           ⑨√
+	new_article.html    新建文章    ④√
+	register.html          注册          ⑩√
+	tag.html                分类           ③√
+                base.html              这是模板（新增）√

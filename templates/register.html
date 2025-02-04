@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}注册{% endblock %}
+
+{% block css %}
+<style>
+
+    #captchaCanvas {
+        border: 1px solid #000;
+        margin-bottom: 10px;
+    }
+
+    /* 优化表单样式 */
+    #registerForm {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+    }
+
+    /* 优化输入框样式 */
+    #registerForm input[type="text"],
+    #registerForm input[type="password"],
+    #registerForm input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    #registerForm input[type="text"]:focus,
+    #registerForm input[type="password"]:focus,
+    #registerForm input[type="email"]:focus {
+        border-color: var(--primary-color);
+        outline: none;
+    }
+
+    /* 优化按钮样式 */
+    #registerForm input[type="submit"],
+    #refreshCaptcha {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #registerForm input[type="submit"]:hover,
+    #refreshCaptcha:hover {
+        background-color: #0b5ed7;
+    }
+
+    /* 优化标签样式 */
+    #registerForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 576px) {
+        form {
+            width: 90%;
+        }
+    }
+
+    /* 新增样式，将验证码图片和按钮放在同一行 */
+    .captcha-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .captcha-group button {
+        margin-left: 10px;
+    }
+
+    /* 验证码图片区域样式 */
+    .captcha-container {
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        padding: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>注册</h1>
+<form method="post" id="registerForm">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+    <label for="email">邮箱:</label>
+    <input type="email" id="email" name="email" required>
+    <label for="captchaInput">验证码:</label>
+    <div class="captcha-group">
+        <div class="captcha-container">
+            <canvas id="captchaCanvas" width="120" height="40"></canvas>
+        </div>
+        <button type="button" id="refreshCaptcha">换一张</button>
+    </div>
+    <input type="text" id="captchaInput" name="captchaInput" required>
+    <input type="submit" value="注册">
+</form>
+<script>
+    function generateCaptchaCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let captchaCode = '';
+        for (let i = 0; i < 4; i++) {
+            captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return captchaCode;
+    }
+
+    function drawCaptcha(captchaCode) {
+        const canvas = document.getElementById('captchaCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 设置字体和颜色，提高对比度，并添加阴影
+        ctx.font = '28px Arial';
+        ctx.fillStyle = 'black';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+
+        // 自绘_干扰点，改变颜色和大小
+        for (let i = 0; i < 30; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2 + 1, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+            ctx.fill();
+        }
+
+        // 自绘_干扰线，改变颜色和样式
+        for (let i = 0; i < 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.bezierCurveTo(
+                Math.random() * canvas.width, Math.random() * canvas.height,
+                Math.random() * canvas.width, Math.random() * canvas.height,
+                Math.random() * canvas.width, Math.random() * canvas.height
+            );
+            ctx.lineWidth = Math.random() * 2 + 1;
+            ctx.strokeStyle = 'rgba(150, 150, 150, 0.7)';
+            ctx.setLineDash([Math.random() * 6 + 6, Math.random() * 6 + 6]);
+            ctx.stroke();
+        }
+
+        // 绘制验证码字符，减少旋转角度
+        for (let i = 0; i < captchaCode.length; i++) {
+            ctx.save();
+            ctx.translate(15 + i * 25, 30);
+            ctx.rotate((Math.random() - 0.5) * 0.1);
+            ctx.fillText(captchaCode[i], 0, 0);
+            ctx.restore();
+        }
+    }
+
+    let correctCaptcha = generateCaptchaCode();
+    drawCaptcha(correctCaptcha);
+
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', function (e) {
+        const userInput = document.getElementById('captchaInput').value;
+        // 将用户输入和正确验证码都转换为小写进行比较
+        if (userInput.toLowerCase() !== correctCaptcha.toLowerCase()) {
+            alert('验证码错误，请重新输入');
+            e.preventDefault();
+        }
+    });
+
+    const refreshButton = document.getElementById('refreshCaptcha');
+    refreshButton.addEventListener('click', function () {
+        correctCaptcha = generateCaptchaCode();
+        drawCaptcha(correctCaptcha);
+        document.getElementById('captchaInput').value = '';
+    });
+</script>
+{% endblock %}
