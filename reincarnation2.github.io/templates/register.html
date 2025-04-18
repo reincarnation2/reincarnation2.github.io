@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}注册{% endblock %}
+
+{% block css %}
+<style>
+
+    #captchaCanvas {
+        border: 1px solid #000;
+        margin-bottom: 10px;
+    }
+
+
+    #registerForm {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+    }
+
+
+    #registerForm input[type="text"],
+    #registerForm input[type="password"],
+    #registerForm input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    #registerForm input[type="text"]:focus,
+    #registerForm input[type="password"]:focus,
+    #registerForm input[type="email"]:focus {
+        border-color: var(--primary-color);
+        outline: none;
+    }
+
+
+    #registerForm input[type="submit"],
+    #refreshCaptcha {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #registerForm input[type="submit"]:hover,
+    #refreshCaptcha:hover {
+        background-color: #0b5ed7;
+    }
+
+
+    #registerForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+
+    @media (max-width: 576px) {
+        form {
+            width: 90%;
+        }
+    }
+
+
+    .captcha-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .captcha-group button {
+        margin-left: 10px;
+    }
+
+
+    .captcha-container {
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        padding: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>注册</h1>
+<form method="post" id="registerForm">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+    <label for="email">邮箱:</label>
+    <input type="email" id="email" name="email" required>
+    <label for="captchaInput">验证码:</label>
+    <div class="captcha-group">
+        <div class="captcha-container">
+            <canvas id="captchaCanvas" width="120" height="40"></canvas>
+        </div>
+        <button type="button" id="refreshCaptcha">换一张</button>
+    </div>
+    <input type="text" id="captchaInput" name="captchaInput" required>
+    <input type="submit" value="注册">
+</form>
+<script>
+    function generateCaptchaCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let captchaCode = '';
+        for (let i = 0; i < 4; i++) {
+            captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return captchaCode;
+    }
+
+    function drawCaptcha(captchaCode) {
+        const canvas = document.getElementById('captchaCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+        ctx.font = '28px Arial';
+        ctx.fillStyle = 'black';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+
+
+        for (let i = 0; i < 30; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2 + 1, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+            ctx.fill();
+        }
+
+
+        for (let i = 0; i < 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.bezierCurveTo(
+                Math.random() * canvas.width, Math.random() * canvas.height,
+                Math.random() * canvas.width, Math.random() * canvas.height,
+                Math.random() * canvas.width, Math.random() * canvas.height
+            );
+            ctx.lineWidth = Math.random() * 2 + 1;
+            ctx.strokeStyle = 'rgba(150, 150, 150, 0.7)';
+            ctx.setLineDash([Math.random() * 6 + 6, Math.random() * 6 + 6]);
+            ctx.stroke();
+        }
+
+
+        for (let i = 0; i < captchaCode.length; i++) {
+            ctx.save();
+            ctx.translate(15 + i * 25, 30);
+            ctx.rotate((Math.random() - 0.5) * 0.1);
+            ctx.fillText(captchaCode[i], 0, 0);
+            ctx.restore();
+        }
+    }
+
+    let correctCaptcha = generateCaptchaCode();
+    drawCaptcha(correctCaptcha);
+
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', function (e) {
+        const userInput = document.getElementById('captchaInput').value;
+
+        if (userInput.toLowerCase() !== correctCaptcha.toLowerCase()) {
+            alert('验证码错误，请重新输入');
+            e.preventDefault();
+        }
+    });
+
+    const refreshButton = document.getElementById('refreshCaptcha');
+    refreshButton.addEventListener('click', function () {
+        correctCaptcha = generateCaptchaCode();
+        drawCaptcha(correctCaptcha);
+        document.getElementById('captchaInput').value = '';
+    });
+</script>
+{% endblock %}

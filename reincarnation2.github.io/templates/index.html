@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}主页{% endblock %}
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4">个人博客</h1>
+        <div class="row">
+            {% for article in articles %}
+
+            <div class="col-md-12 mb-4">
+                <div class="card h-100 shadow-sm" style="width: 100%; margin: 0 auto; position: relative;">
+
+                    {% if article.thumbnail %}
+                    <img alt="Article Image" class="card-img-top" src="{{ article.thumbnail }}"
+                         style="height: 700px; object-fit: cover;">
+                    {% else %}
+                    <img alt="Article Image" class="card-img-top" src="/static/default-thumbnail.jpg"
+                         style="height: 700px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body text-white"
+                         style="padding: 20px; position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);">
+                        <h5 class="card-title"><a href="{{ url_for('article', article_id=article.id) }}" style="color: white;">{{ article.title }}</a></h5>
+                        <p class="card-text" style="font-size: 1em;">作者: {{ article.author.username }}</p>
+                        <p class="card-text" style="font-size: 1em;">发布日期: {{ article.publish_date }}</p>
+                        <p class="card-text" style="font-size: 1em;">分类: {{ article.category }}</p>
+                        <p class="card-text" style="font-size: 1em;">标签: {{ article.tags }}</p>
+                        <p class="card-text" style="font-size: 1em;">{{ article.content[:200] }}...</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

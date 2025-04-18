@@ -1,0 +1,319 @@
+
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}个人博客{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --nav-bg-color: #333;
+            --nav-text-color: white;
+            --footer-bg-color: #333;
+            --footer-text-color: white;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e6e6e6;
+            --primary-color: #66bfff;
+            --secondary-color: #adb5bd;
+            --nav-bg-color: #121212;
+            --nav-text-color: #e6e6e6;
+            --footer-bg-color: #121212;
+            --footer-text-color: #e6e6e6;
+        }
+
+        [data-theme="China_Red"] {
+            --bg-color: #FFCDD2;
+            --text-color: #4A4A4A;
+            --primary-color: #FF1744;
+            --secondary-color: #FF5252;
+            --mainNav: #FF3D00;
+            --container-fluid: #FF6E40;
+            --nav-text-color: #FFFFFF;
+            --footer-bg-color: #FF1744;
+            --footer-text-color: #FFFFFF;
+        }
+
+        [data-theme="China_Red"] .card-body {
+            background-color: #FF8A80;
+        }
+
+        [data-theme="Fantasy_Blue"] {
+            --bg-color: #E3F2FD;
+            --text-color: #1A237E;
+            --primary-color: #1976D2;
+            --secondary-color: #64B5F6;
+            --nav-bg-color: #0D47A1;
+            --nav-text-color: #FFFFFF;
+            --footer-bg-color: #1976D2;
+            --footer-text-color: #FFFFFF;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        nav {
+            background-color: var(--nav-bg-color);
+            color: var(--nav-text-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s, background-color 0.5s ease, color 0.5s ease;
+        }
+
+        footer {
+            background-color: var(--footer-bg-color);
+            color: var(--footer-text-color);
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .article-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-menu {
+            max-width: 8vw;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .navbar {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .btn-outline-light {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            .card {
+                width: 100%;
+            }
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+
+        .btn-github {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-github:hover {
+            background-color: #555;
+        }
+
+        .btn-github i {
+            font-size: 1.5rem;
+        }
+
+        {% block css %}{% endblock %}
+    </style>
+</head>
+
+<body data-theme="light">
+    <div class="main-wrapper">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('index') }}">个人博客</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="切换导航">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">首页</a></li>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                分类
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                {% for category in categories %}
+                                <li><a class="dropdown-item" href="{{ url_for('category', category_name=category) }}">{{ category }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="tagDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                标签
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="tagDropdown">
+                                {% for tag in tags %}
+                                <li><a class="dropdown-item" href="{{ url_for('tag', tag_name=tag) }}">{{ tag }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        {% if 'user_id' in session %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">退出</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">登录</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">注册</a></li>
+                        {% endif %}
+                        <form class="d-flex" method="get" action="{{ url_for('search') }}">
+                            <input class="form-control me-2" type="search" placeholder="搜索文章" aria-label="Search" name="query">
+                            <button class="btn btn-outline-light" type="submit">🔍</button>
+                        </form>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">关于我</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">联系我</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                主题
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="themeDropdown">
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('light')">明亮</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('dark')">暗黑</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('China_Red')">中国红</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="setTheme('Fantasy_Blue')">奇幻蓝</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">个人中心</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content-center" style="padding-top: 56px;">
+        {% block content %}{% endblock %}
+        </div>
+
+
+        <footer>
+            <div class="container">
+                &copy; 2025 Z.个人博客版权所有（现在没备案）
+                <a class="btn-github ms-3" href="https://github.com/reincarnation2/reincarnation2.github.io"
+                   target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            document.cookie = `theme=${theme}; path=/`;
+        }
+
+        
+        const savedTheme = getCookie('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+
+        
+        let prevScrollpos = window.pageYOffset;
+        window.onscroll = function () {
+            const currentScrollPos = window.pageYOffset;
+            const mainNav = document.getElementById("mainNav");
+            if (prevScrollpos > currentScrollPos) {
+                
+                mainNav.style.top = "0";
+            } else {
+                
+                mainNav.style.top = "-56px"; 
+            }
+            prevScrollpos = currentScrollPos;
+        }
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

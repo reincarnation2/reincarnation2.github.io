@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ category }} 分类文章</h1>
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 shadow-sm">
+
+            {% if article.thumbnail %}
+                <img src="{{ article.thumbnail }}" alt="Article Image" class="card-img-top">
+                {% else %}
+                <img src="/static/default-thumbnail.jpg" alt="Article Image" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{{ url_for('article', article_id=article.id) }}">{{ article.title }}</a></h5>
+                    <p class="card-text">作者: {{ article.author.username }}</p>
+                    <p class="card-text">发布日期: {{ article.publish_date }}</p>
+                    <p class="card-text">分类: {{ article.category }}</p>
+                    <p class="card-text">标签: {{ article.tags }}</p>
+                    <p class="card-text">{{ article.content[:200] }}...</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

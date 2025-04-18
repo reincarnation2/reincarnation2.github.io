@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-center">
+        <div class="container">
+            <h1 class="mb-5">{{ article.title }}</h1> <!-- 增加标题和文章之间的间距 -->
+            <p class="mb-2">作者: {{ article.author.username }}</p>
+            <p class="mb-4">发布日期: {{ article.publish_date }}</p>
+            {% if article.thumbnail %}
+            <img src="{{ article.thumbnail }}" alt="文章封面" class="img-fluid mb-4">
+            {% endif %}
+            <div class="card shadow-sm mb-5"> <!-- 增加文章卡片和评论之间的间距 -->
+                <div class="card-body">
+                    <p>{{ article.content }}</p>
+                </div>
+            </div>
+
+            <h2 class="mb-4">评论（登录即可评论哦）</h2> <!-- 增加评论标题和评论卡片之间的间距 -->
+            {% for comment in comments.items %}
+            <div class="card shadow-sm mb-4"> <!-- 增加评论卡片之间的间距 -->
+                <div class="card-body">
+                    <p class="mb-1">{{ comment.author.username }} - {{ comment.publish_date }}</p>
+                    <p>{{ comment.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if 'user_id' in session %}
+            <form method="post" action="{{ url_for('add_comment', article_id=article.id) }}" class="mt-5"> <!-- 增加评论表单和评论之间的间距 -->
+                <div class="mb-3">
+                    <textarea name="content" class="form-control" rows="3" placeholder="写下你的评论"></textarea>
+                </div>
+                <input type="submit" value="发表评论" class="btn btn-primary">
+            </form>
+            {% endif %}
+
+            <!-- 分页导航 -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if comments.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('article', article_id=article.id, page=comments.prev_num) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% for page_num in comments.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num == comments.page %}
+                            <li class="page-item active">
+                                <a class="page-link" href="#">{{ page_num }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('article', article_id=article.id, page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">...</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if comments.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('article', article_id=article.id, page=comments.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}
